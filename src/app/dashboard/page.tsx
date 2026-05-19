@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDashboardData } from "@/lib/dashboard-data";
+import { getDashboardData } from "@/lib/dashboard-data-server";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { ResumeGrid } from "@/components/dashboard/ResumeCard";
