@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Color tokens — RGB triplets so Tailwind alpha modifiers work
+   (e.g. bg-card/40, text-accent/60).
+   ============================================================ */
+:root {
+  color-scheme: light;
+  /* Light palette (default) */
+  --color-bg:           250 250 252;   /* off-white page */
+  --color-surface:      255 255 255;   /* base surface */
+  --color-card:         255 255 255;   /* elevated card */
+  --color-border:       226 232 240;   /* slate-200 */
+  --color-text:          15  23  42;   /* slate-900 */
+  --color-text-muted:   100 116 139;   /* slate-500 */
+  --color-accent:        99 102 241;   /* indigo-500 */
+  --color-accent-hover:  79  70 229;   /* indigo-600 */
+  --color-good:          34 197  94;
+  --color-warn:         245 158  11;
+  --color-bad:          239  68  68;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-bg:            13  13  15;
+  --color-surface:       20  20  22;
+  --color-card:          26  26  30;
+  --color-border:        42  42  48;
+  --color-text:         240 237 232;
+  --color-text-muted:   136 136 144;
+  /* accent + good/warn/bad stay the same — they read on either backdrop */
+}
+
+* {
+  border-color: rgb(var(--color-border));
+}
+
+html, body {
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-text));
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Smooth crossfade when toggling themes */
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Cards, surfaces, and borders that share these tokens get the same smooth swap. */
+.card-transition,
+button,
+a,
+input,
+textarea,
+select {
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease, transform 150ms ease;
+}
+
+/* Soft elevated card with theme-aware shadow */
+.card-elevated {
+  background-color: rgb(var(--color-card));
+  border: 1px solid rgb(var(--color-border));
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 12px rgb(15 23 42 / 0.04);
+}
+.dark .card-elevated {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 4px 12px rgb(0 0 0 / 0.25);
+}
+
+/* Hover lift used on dashboard / pricing / feature cards */
+.hover-lift {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Gradient text used on hero */
+.gradient-text {
+  background-image: linear-gradient(90deg, rgb(var(--color-accent)) 0%, rgb(var(--color-accent-hover)) 50%, #A855F7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle ambient blob behind hero */
+.hero-glow {
+  position: absolute;
+  inset: -20% 10% auto 10%;
+  height: 60vh;
+  pointer-events: none;
+  background:
+    radial-gradient(50% 50% at 20% 30%, rgb(99 102 241 / 0.20), transparent 60%),
+    radial-gradient(40% 40% at 80% 40%, rgb(168 85 247 / 0.18), transparent 65%);
+  filter: blur(40px);
+  z-index: 0;
+}
+.dark .hero-glow {
+  background:
+    radial-gradient(50% 50% at 20% 30%, rgb(99 102 241 / 0.30), transparent 60%),
+    radial-gradient(40% 40% at 80% 40%, rgb(168 85 247 / 0.22), transparent 65%);
+}
+
+/* Focus ring (accessible) */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 0.30);
+  border-radius: 6px;
+}
+
+/* Print: show only the resume, full page, white background. */
+@media print {
+  @page {
+    size: Letter;
+    margin: 0.5in;
+  }
+  html, body {
+    background: #ffffff !important;
+    color: #111 !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #resume-print-area, #resume-print-area * {
+    visibility: visible;
+  }
+  #resume-print-area {
+    position: absolute;
+    inset: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+  .resume-print {
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
