@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ApplicationStatus } from "@/types";
 import {
@@ -22,7 +23,9 @@ export function KanbanBoard({ initial }: { initial: KanbanCardData[] }) {
     return map;
   }, [cards]);
 
-  function move(id: string, to: ApplicationStatus) {
+  async function move(id: string, to: ApplicationStatus) {
+    const previous = cards;
+    // Optimistic update — flip locally first.
     setCards((prev) =>
       prev.map((c) => {
         if (c.id !== id) return c;
@@ -31,7 +34,38 @@ export function KanbanBoard({ initial }: { initial: KanbanCardData[] }) {
         return { ...c, status: to, applied_at };
       })
     );
-    // TODO: persist via PATCH /api/jobs/:id { status: to }
+
+    try {
+      const res = await fetch(`/api/jobs/${id}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ status: to })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      // Roll back on failure so the UI stays consistent with the server.
+      console.warn("Failed to persist status change:", err);
+      setCards(previous);
+    }
+  }
+
+  // Brand-new user: no applications yet. Show a friendlier empty state instead
+  // of six "Drop here" columns.
+  if (cards.length === 0) {
+    return (
+      <div className="rounded-card border border-dashed border-border bg-card p-10 text-center">
+        <p className="text-sm font-medium">No applications yet</p>
+        <p className="mt-1 text-xs text-text-muted">
+          Track jobs you&apos;re applying to. Drag cards between columns as you progress.
+        </p>
+        <Link
+          href="/dashboard/tracker?new=1"
+          className="mt-4 inline-block rounded-input bg-accent px-4 py-2 text-xs font-medium text-white hover:bg-accent-hover"
+        >
+          + Add your first application
+        </Link>
+      </div>
+    );
   }
 
   return (

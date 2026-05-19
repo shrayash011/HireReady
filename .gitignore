@@ -18,3 +18,5 @@ next-env.d.ts
 
 # Claude Code local user prefs (per-machine)
 .claude/settings.local.json
+
+.vercel
