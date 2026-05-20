@@ -1,15 +1,65 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { DashboardResume } from "@/lib/dashboard-data";
 import { relativeTime } from "@/lib/dashboard-data";
+import { fetchOrPaywall } from "@/lib/paywall-client";
 import { bandForScore, colorForBand } from "@/lib/ats-heuristic";
 
 export function ResumeCard({ resume }: { resume: DashboardResume }) {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
   const score = resume.last_ats_score;
   const color = score !== null ? colorForBand(bandForScore(score)) : "#888890";
+
+  async function onDuplicate() {
+    if (busy) return;
+    setBusy(true);
+    setMenuOpen(false);
+    try {
+      const res = await fetchOrPaywall("/api/resume/duplicate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ source_id: resume.id })
+      });
+      const json = (await res.json()) as { data?: { id: string }; error?: string | { message?: string } };
+      if (!res.ok || !json.data?.id) {
+        const msg = typeof json.error === "string" ? json.error : json.error?.message ?? "Duplicate failed";
+        alert(msg);
+        return;
+      }
+      router.push(`/dashboard/resume/${json.data.id}/edit`);
+      router.refresh();
+    } catch (err) {
+      if (err instanceof Error && !(err as Error & { paywall?: unknown }).paywall) {
+        alert(err.message);
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onDelete() {
+    if (busy) return;
+    if (!confirm(`Delete "${resume.title}"? This cannot be undone.`)) return;
+    setBusy(true);
+    setMenuOpen(false);
+    try {
+      const res = await fetch(`/api/resume/${resume.id}`, { method: "DELETE" });
+      const json = (await res.json()) as { error?: string | { message?: string } };
+      if (!res.ok) {
+        const msg = typeof json.error === "string" ? json.error : json.error?.message ?? "Delete failed";
+        alert(msg);
+        return;
+      }
+      router.refresh();
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <div className="group relative flex flex-col gap-3 rounded-card border border-border bg-card p-4 transition hover:border-accent/40">
@@ -44,8 +94,9 @@ export function ResumeCard({ resume }: { resume: DashboardResume }) {
         </Link>
         <button
           type="button"
-          onClick={() => alert("TODO: duplicate via /api/resume/duplicate")}
-          className="flex-1 rounded-input border border-border bg-surface px-2 py-1.5 text-xs hover:border-accent hover:text-accent"
+          onClick={onDuplicate}
+          disabled={busy}
+          className="flex-1 rounded-input border border-border bg-surface px-2 py-1.5 text-xs hover:border-accent hover:text-accent disabled:opacity-50"
         >
           Duplicate
         </button>
@@ -78,7 +129,11 @@ export function ResumeCard({ resume }: { resume: DashboardResume }) {
           >
             Download PDF
           </a>
-          <button className="px-3 py-2 text-left text-bad hover:bg-card" onClick={() => alert("TODO: delete confirmation")}>
+          <button
+            className="px-3 py-2 text-left text-bad hover:bg-card disabled:opacity-50"
+            onClick={onDelete}
+            disabled={busy}
+          >
             Delete
           </button>
         </div>
