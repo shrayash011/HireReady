@@ -8,6 +8,11 @@ const ACTIONS = [
     primary: true
   },
   {
+    href: "/dashboard/cover-letter/new",
+    label: "New Cover Letter",
+    sub: "AI-drafted, tailored to the JD"
+  },
+  {
     href: "/dashboard/tracker?new=1",
     label: "New Application",
     sub: "Track a job you're applying to"
@@ -21,7 +26,7 @@ const ACTIONS = [
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {ACTIONS.map((a) => (
         <Link
           key={a.href}

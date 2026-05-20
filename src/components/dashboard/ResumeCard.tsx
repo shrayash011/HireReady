@@ -70,9 +70,14 @@ export function ResumeCard({ resume }: { resume: DashboardResume }) {
           >
             Open
           </Link>
-          <button className="px-3 py-2 text-left hover:bg-card" onClick={() => alert("TODO: /api/resume/export-pdf")}>
+          <a
+            href={`/dashboard/resume/${resume.id}/print`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-2 hover:bg-card"
+          >
             Download PDF
-          </button>
+          </a>
           <button className="px-3 py-2 text-left text-bad hover:bg-card" onClick={() => alert("TODO: delete confirmation")}>
             Delete
           </button>
