@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase";
+import { sendEmail, welcomeEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -28,11 +29,21 @@ export async function GET(req: Request) {
   }
 
   const supabase = createServerSupabase();
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
     return NextResponse.redirect(
       dest(`/login?error=${encodeURIComponent(error.message)}`)
     );
+  }
+
+  // First-time OAuth signups: created_at ≈ now → fire welcome email.
+  const user = data?.user;
+  const createdAt = user?.created_at ? new Date(user.created_at).getTime() : 0;
+  const isNew = user && Date.now() - createdAt < 60_000;
+  if (isNew && user.email) {
+    const name = (user.user_metadata?.full_name as string | undefined) ?? "";
+    const { subject, html, text } = welcomeEmail(name, user.email);
+    sendEmail({ to: user.email, subject, html, text }).catch(() => {});
   }
 
   return NextResponse.redirect(dest(next));

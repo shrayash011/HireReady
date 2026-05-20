@@ -20,7 +20,7 @@ export function TopNav({ user }: { user: NavUser }) {
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-bg/80 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6">
         <div className="flex items-center gap-6">
           <Link href="/dashboard" className="text-sm font-semibold tracking-tight">
             <span className="text-accent">Hire</span>Ready
@@ -32,8 +32,8 @@ export function TopNav({ user }: { user: NavUser }) {
           </nav>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className={`rounded-pill px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${badge.tone}`}>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className={`hidden rounded-pill px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider sm:inline ${badge.tone}`}>
             {badge.label}
           </span>
           {user.plan === "free" && (
@@ -48,9 +48,11 @@ export function TopNav({ user }: { user: NavUser }) {
           <form action="/auth/signout" method="POST">
             <button
               type="submit"
-              className="rounded-input border border-border bg-surface px-3 py-1.5 text-xs text-text-muted hover:border-accent hover:text-accent"
+              aria-label="Sign out"
+              className="rounded-input border border-border bg-surface px-2 py-1.5 text-xs text-text-muted hover:border-accent hover:text-accent sm:px-3"
             >
-              Sign out
+              <span className="hidden sm:inline">Sign out</span>
+              <span className="sm:hidden" aria-hidden>↩</span>
             </button>
           </form>
         </div>

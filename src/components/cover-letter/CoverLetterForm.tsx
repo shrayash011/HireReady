@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { fetchOrPaywall } from "@/lib/paywall-client";
+import { JobUrlInput } from "@/components/jobs/JobUrlInput";
 import type { CoverLetterTone } from "@/types";
 import type { ResumeOption } from "@/lib/cover-letter-data-server";
 
@@ -101,6 +102,13 @@ export function CoverLetterForm({ resumes }: { resumes: ResumeOption[] }) {
             ))}
           </select>
         </div>
+
+        <JobUrlInput
+          onParsed={(job) => {
+            if (job.company) setCompany(job.company);
+            if (job.jobDescription) setJobDescription(job.jobDescription);
+          }}
+        />
 
         <div>
           <label className="text-xs font-medium text-text-muted">Company</label>

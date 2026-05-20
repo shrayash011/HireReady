@@ -126,7 +126,36 @@ Return ONLY the cover letter body text. No salutation, no "Dear Hiring Manager",
 }
 
 /**
- * 4. Interview question generator — 10 role-specific behavioral + technical questions.
+ * 4. Job posting parser — extract company, role, location, and clean JD text from
+ *    raw HTML scraped from a job posting URL.
+ */
+export function buildJobUrlParsePrompt(plainText: string, sourceUrl: string): string {
+  return `You are parsing a job posting that was scraped from a public URL. Extract the key fields and a clean job description.
+
+Source URL: ${sourceUrl}
+
+Scraped text (may contain navigation, footers, cookie banners, and other noise — ignore it):
+${plainText}
+
+Rules:
+1. "company" — the hiring company name. If multiple candidates appear (recruiter agency + actual employer), prefer the actual employer.
+2. "role" — the job title as posted. Strip seniority qualifiers only if they're not part of the canonical title.
+3. "location" — city + country, or "Remote" if explicitly remote. Empty string if not stated.
+4. "jobDescription" — the substantive content: about-the-role, responsibilities, requirements, qualifications, benefits. Drop boilerplate like "About Us — we are an equal opportunity employer", cookie notices, "apply now" CTAs, navigation, related job links, footer text.
+5. Preserve paragraph breaks and bullet points (use "- " for bullets). Keep it readable.
+6. Do not invent details. If a field can't be found, return an empty string for it.
+
+Return ONLY this JSON (no markdown, no commentary):
+{
+  "company": "string",
+  "role": "string",
+  "location": "string",
+  "jobDescription": "string"
+}`;
+}
+
+/**
+ * 5. Interview question generator — 10 role-specific behavioral + technical questions.
  */
 export function buildInterviewQuestionsPrompt(
   role: string,

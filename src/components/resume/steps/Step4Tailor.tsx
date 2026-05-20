@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { ResumeContent } from "@/types";
 import { Textarea } from "@/components/ui/Field";
 import { fetchOrPaywall } from "@/lib/paywall-client";
+import { JobUrlInput } from "@/components/jobs/JobUrlInput";
 
 export function Step4Tailor({
   data,
@@ -54,6 +55,8 @@ export function Step4Tailor({
           quantify impact, and prioritize relevant experience.
         </p>
       </header>
+
+      <JobUrlInput onParsed={(job) => setJobDescription(job.jobDescription)} />
 
       <Textarea
         rows={10}

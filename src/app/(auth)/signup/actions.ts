@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase";
+import { sendEmail, welcomeEmail } from "@/lib/email";
 
 export interface SignupResult {
   error?: string;
@@ -25,6 +26,10 @@ export async function signupAction(_prev: SignupResult, formData: FormData): Pro
   });
 
   if (error) return { error: error.message };
+
+  // Fire-and-forget welcome email — failures don't block signup.
+  const { subject, html, text } = welcomeEmail(fullName, email);
+  sendEmail({ to: email, subject, html, text }).catch(() => {});
 
   // If email confirmation is on, session is null until the user clicks the link.
   if (!data.session) {
