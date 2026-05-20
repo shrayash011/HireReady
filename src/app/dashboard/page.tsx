@@ -22,7 +22,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-text-muted">Your job search, all in one place.</p>
           </div>
           <Link
-            href="/settings"
+            href="/dashboard/settings"
             className="rounded-input border border-border bg-card px-3 py-2 text-xs text-text-muted hover:border-accent hover:text-accent"
           >
             Settings

@@ -19,6 +19,20 @@ create table if not exists public.users (
   updated_at timestamptz not null default now()
 );
 
+-- Settings-page columns (added 2026-05). Safe to re-run.
+alter table public.users
+  add column if not exists job_title              text,
+  add column if not exists location               text,
+  add column if not exists phone                  text,
+  add column if not exists linkedin_url           text,
+  add column if not exists portfolio_url          text,
+  add column if not exists default_template       text default 'clean'
+    check (default_template in ('clean','modern','executive')),
+  add column if not exists default_language       text default 'en',
+  add column if not exists notify_low_ats         boolean not null default false,
+  add column if not exists notify_weekly_summary  boolean not null default true,
+  add column if not exists notify_interview_reminders boolean not null default false;
+
 -- =============================================================
 -- resumes
 -- =============================================================
