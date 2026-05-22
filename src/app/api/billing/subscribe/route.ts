@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase";
+import { PAID_PLANS_LIVE } from "@/lib/plan";
 import { getStripe, priceIdFor, type PlanCheckoutKey } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -9,6 +10,14 @@ interface Body {
 }
 
 export async function POST(req: Request) {
+  // Hard stop while we're in free-only launch mode.
+  if (!PAID_PLANS_LIVE) {
+    return NextResponse.json(
+      { error: "Paid plans are launching soon." },
+      { status: 503 }
+    );
+  }
+
   let body: Body;
   try {
     body = (await req.json()) as Body;

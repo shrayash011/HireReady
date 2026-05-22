@@ -2,6 +2,7 @@
 
 import { Fragment, useState } from "react";
 import type { Plan } from "@/types";
+import { PAID_PLANS_LIVE } from "@/lib/plan";
 import type { PlanCheckoutKey } from "@/lib/stripe";
 
 type Cycle = "monthly" | "yearly";
@@ -154,11 +155,18 @@ export function PricingTable({ highlight }: { highlight?: Plan }) {
                 isHighlight ? "border-accent ring-1 ring-accent/40" : "border-border"
               }`}
             >
-              {isHighlight && (
-                <span className="self-start rounded-pill bg-accent/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
-                  Most popular
-                </span>
-              )}
+              <div className="flex flex-wrap gap-1.5">
+                {isHighlight && (
+                  <span className="rounded-pill bg-accent/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-accent">
+                    Most popular
+                  </span>
+                )}
+                {p.id !== "free" && !PAID_PLANS_LIVE && (
+                  <span className="rounded-pill bg-warn/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-warn">
+                    Coming soon
+                  </span>
+                )}
+              </div>
               <div>
                 <h3 className="text-lg font-semibold">{p.name}</h3>
                 <p className="text-xs text-text-muted">{p.tagline}</p>
@@ -170,18 +178,27 @@ export function PricingTable({ highlight }: { highlight?: Plan }) {
                 </span>
               </div>
 
-              <button
-                type="button"
-                onClick={() => planKey ? subscribe(planKey) : (window.location.href = "/signup")}
-                disabled={loadingPlan !== null && loadingPlan !== planKey}
-                className={`rounded-input px-3 py-2.5 text-sm font-medium transition ${
-                  isHighlight
-                    ? "bg-accent text-white hover:bg-accent-hover"
-                    : "border border-border bg-surface text-text hover:border-accent"
-                } disabled:opacity-50`}
-              >
-                {loadingPlan === planKey ? "Redirecting…" : p.cta}
-              </button>
+              {p.id === "free" || PAID_PLANS_LIVE ? (
+                <button
+                  type="button"
+                  onClick={() => planKey ? subscribe(planKey) : (window.location.href = "/signup")}
+                  disabled={loadingPlan !== null && loadingPlan !== planKey}
+                  className={`rounded-input px-3 py-2.5 text-sm font-medium transition ${
+                    isHighlight
+                      ? "bg-accent text-white hover:bg-accent-hover"
+                      : "border border-border bg-surface text-text hover:border-accent"
+                  } disabled:opacity-50`}
+                >
+                  {loadingPlan === planKey ? "Redirecting…" : p.cta}
+                </button>
+              ) : (
+                <a
+                  href="mailto:hireready011@gmail.com?subject=Notify%20me%20when%20paid%20plans%20launch"
+                  className="rounded-input border border-dashed border-border bg-surface px-3 py-2.5 text-center text-sm font-medium text-text-muted transition hover:border-accent hover:text-accent"
+                >
+                  Notify me when it launches
+                </a>
+              )}
             </div>
           );
         })}
@@ -235,7 +252,9 @@ export function PricingTable({ highlight }: { highlight?: Plan }) {
       </div>
 
       <p className="text-center text-xs text-text-muted">
-        Cancel anytime. All prices in USD. Pro yearly is ~$7/mo, Premium yearly is ~$23/mo.
+        {PAID_PLANS_LIVE
+          ? "Cancel anytime. All prices in USD. Pro yearly is ~$7/mo, Premium yearly is ~$23/mo."
+          : "Paid plans are launching soon. For now, everything on the Free plan is available with no card required."}
       </p>
     </div>
   );

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { PAID_PLANS_LIVE } from "@/lib/plan";
 
 export const metadata = {
   title: "HireReady — Beat the ATS. Land the interview.",
@@ -418,49 +419,77 @@ function PricingTeaser() {
       </header>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {plans.map((p) => (
-          <div
-            key={p.name}
-            className={`relative rounded-card border p-6 ${
-              p.highlight ? "border-accent bg-accent/5 shadow-lift" : "border-border bg-card"
-            }`}
-          >
-            {p.highlight && (
-              <span className="absolute -top-2 right-4 rounded-pill bg-accent px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white">
-                Most popular
-              </span>
-            )}
-            <div className="text-xs uppercase tracking-widest text-text-muted">{p.name}</div>
-            <div className="mt-2 flex items-baseline gap-1">
-              <span className="text-3xl font-semibold">{p.price}</span>
-              <span className="text-xs text-text-muted">{p.sub}</span>
-            </div>
-            <ul className="mt-4 flex flex-col gap-2 text-sm">
-              {p.features.map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <span className="text-accent">✓</span>
-                  <span className="text-text-muted">{f}</span>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href={p.href}
-              className={`mt-6 block rounded-input px-4 py-2.5 text-center text-sm font-medium transition ${
-                p.highlight
-                  ? "bg-accent text-white hover:bg-accent-hover"
-                  : "border border-border bg-surface hover:border-accent hover:text-accent"
+        {plans.map((p) => {
+          const isFree = p.name === "Free";
+          const isComingSoon = !isFree && !PAID_PLANS_LIVE;
+          return (
+            <div
+              key={p.name}
+              className={`relative rounded-card border p-6 ${
+                p.highlight ? "border-accent bg-accent/5 shadow-lift" : "border-border bg-card"
               }`}
             >
-              {p.cta}
-            </Link>
-          </div>
-        ))}
+              <div className="absolute -top-2 right-4 flex gap-1.5">
+                {p.highlight && PAID_PLANS_LIVE && (
+                  <span className="rounded-pill bg-accent px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white">
+                    Most popular
+                  </span>
+                )}
+                {isComingSoon && (
+                  <span className="rounded-pill bg-warn/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white">
+                    Coming soon
+                  </span>
+                )}
+              </div>
+              <div className="text-xs uppercase tracking-widest text-text-muted">{p.name}</div>
+              <div className="mt-2 flex items-baseline gap-1">
+                <span className="text-3xl font-semibold">{p.price}</span>
+                <span className="text-xs text-text-muted">{p.sub}</span>
+              </div>
+              <ul className="mt-4 flex flex-col gap-2 text-sm">
+                {p.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <span className="text-accent">✓</span>
+                    <span className="text-text-muted">{f}</span>
+                  </li>
+                ))}
+              </ul>
+              {isFree || !isComingSoon ? (
+                <Link
+                  href={p.href}
+                  className={`mt-6 block rounded-input px-4 py-2.5 text-center text-sm font-medium transition ${
+                    p.highlight
+                      ? "bg-accent text-white hover:bg-accent-hover"
+                      : "border border-border bg-surface hover:border-accent hover:text-accent"
+                  }`}
+                >
+                  {p.cta}
+                </Link>
+              ) : (
+                <a
+                  href="mailto:hireready011@gmail.com?subject=Notify%20me%20when%20paid%20plans%20launch"
+                  className="mt-6 block rounded-input border border-dashed border-border bg-surface px-4 py-2.5 text-center text-sm font-medium text-text-muted hover:border-accent hover:text-accent"
+                >
+                  Notify me
+                </a>
+              )}
+            </div>
+          );
+        })}
       </div>
       <p className="mt-6 text-center text-xs text-text-muted">
-        Annual plans available — 2 months free.{" "}
-        <Link href="/pricing" className="text-accent hover:underline">
-          Compare all plans →
-        </Link>
+        {PAID_PLANS_LIVE ? (
+          <>
+            Annual plans available — 2 months free.{" "}
+            <Link href="/pricing" className="text-accent hover:underline">
+              Compare all plans →
+            </Link>
+          </>
+        ) : (
+          <>
+            Paid plans launching soon. Until then, everything on Free is available — no card required.
+          </>
+        )}
       </p>
     </section>
   );

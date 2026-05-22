@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PAYWALL_EVENT, type ClientPaywallReason } from "@/lib/paywall-client";
+import { PAID_PLANS_LIVE } from "@/lib/plan";
 
 interface Unlock {
   title: string;
@@ -143,10 +144,18 @@ export function UpgradePromptModal() {
         <div className="flex flex-col gap-4 p-6">
           <div>
             <span className="text-[10px] font-semibold uppercase tracking-widest text-accent">
-              {u.recommendedPlan === "premium" ? "Premium" : "Upgrade to Pro"}
+              {!PAID_PLANS_LIVE && reason.code === "limit_reached"
+                ? "Coming soon"
+                : u.recommendedPlan === "premium"
+                  ? "Premium"
+                  : "Upgrade to Pro"}
             </span>
             <h2 className="mt-1 text-lg font-semibold leading-snug">{u.title}</h2>
-            <p className="mt-1 text-sm text-text-muted">{u.body}</p>
+            <p className="mt-1 text-sm text-text-muted">
+              {!PAID_PLANS_LIVE && reason.code === "limit_reached"
+                ? "Paid plans are launching soon. Tap below and we'll email you the moment they're live."
+                : u.body}
+            </p>
           </div>
 
           <ul className="flex flex-col gap-1.5 rounded-input border border-border bg-surface p-3 text-sm">
@@ -166,13 +175,23 @@ export function UpgradePromptModal() {
             >
               Maybe later
             </button>
-            <Link
-              href={`/pricing?highlight=${u.recommendedPlan}`}
-              onClick={() => setReason(null)}
-              className="flex-1 rounded-input bg-accent px-3 py-2 text-center text-sm font-medium text-white hover:bg-accent-hover"
-            >
-              See plans →
-            </Link>
+            {!PAID_PLANS_LIVE && reason.code === "limit_reached" ? (
+              <a
+                href="mailto:hireready011@gmail.com?subject=Notify%20me%20when%20paid%20plans%20launch"
+                onClick={() => setReason(null)}
+                className="flex-1 rounded-input bg-accent px-3 py-2 text-center text-sm font-medium text-white hover:bg-accent-hover"
+              >
+                Notify me →
+              </a>
+            ) : (
+              <Link
+                href={`/pricing?highlight=${u.recommendedPlan}`}
+                onClick={() => setReason(null)}
+                className="flex-1 rounded-input bg-accent px-3 py-2 text-center text-sm font-medium text-white hover:bg-accent-hover"
+              >
+                See plans →
+              </Link>
+            )}
           </div>
         </div>
       </div>

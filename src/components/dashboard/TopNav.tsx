@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Plan } from "@/types";
+import { PAID_PLANS_LIVE } from "@/lib/plan";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface NavUser {
@@ -36,7 +37,7 @@ export function TopNav({ user }: { user: NavUser }) {
           <span className={`hidden rounded-pill px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider sm:inline ${badge.tone}`}>
             {badge.label}
           </span>
-          {user.plan === "free" && (
+          {user.plan === "free" && PAID_PLANS_LIVE && (
             <Link href="/pricing" className="hidden text-xs text-accent hover:underline sm:inline">
               Upgrade
             </Link>

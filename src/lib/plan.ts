@@ -8,6 +8,13 @@ type SupabaseClient = {
   from: (table: string) => unknown;
 };
 
+/**
+ * Launch toggle — when false, paid plans are hidden / shown as "Coming soon"
+ * and the Stripe checkout API isn't called. Flip to true once Stripe (or
+ * LemonSqueezy / Paddle) is fully wired and tested in prod.
+ */
+export const PAID_PLANS_LIVE = false;
+
 export type DailyFeature = "resumes" | "ats_checks" | "cover_letters" | "interviews";
 
 /** Daily/total caps that apply when plan === "free". Paid plans are uncapped. */
