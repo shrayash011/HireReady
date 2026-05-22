@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { UpgradePromptModal } from "@/components/ui/UpgradePromptModal";
 
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-bg text-text antialiased">
         {children}
         <UpgradePromptModal />
+        <Analytics />
       </body>
     </html>
   );
