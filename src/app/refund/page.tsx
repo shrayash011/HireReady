@@ -23,11 +23,11 @@ export default function RefundPage() {
         </thead>
         <tbody>
           <tr>
-            <td>Within 7 days of your first payment</td>
+            <td>Within 3 days of your first payment</td>
             <td>Full refund — no questions asked</td>
           </tr>
           <tr>
-            <td>After 7 days</td>
+            <td>After 3 days</td>
             <td>No refund — access continues until end of billing period</td>
           </tr>
           <tr>
