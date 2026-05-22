@@ -93,6 +93,13 @@ export default function SignupPage({
           </Link>
         </p>
       </div>
+
+      <p className="mt-4 text-center text-[11px] leading-relaxed text-text-muted">
+        By creating an account you agree to our{" "}
+        <Link href="/terms" className="hover:text-accent">Terms</Link>
+        {" "}and{" "}
+        <Link href="/privacy" className="hover:text-accent">Privacy Policy</Link>.
+      </p>
     </div>
   );
 }

@@ -107,6 +107,64 @@ select {
   border-radius: 6px;
 }
 
+/* Legal pages — readable typography without @tailwindcss/typography. */
+.legal-prose {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgb(var(--color-text));
+}
+.legal-prose > * + * { margin-top: 1rem; }
+.legal-prose h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 2rem;
+  letter-spacing: -0.01em;
+}
+.legal-prose h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+.legal-prose ul, .legal-prose ol {
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+}
+.legal-prose ul { list-style: disc; }
+.legal-prose ol { list-style: decimal; }
+.legal-prose li + li { margin-top: 0.4rem; }
+.legal-prose a {
+  color: rgb(var(--color-accent));
+  text-decoration: underline;
+}
+.legal-prose strong { font-weight: 600; }
+.legal-prose hr {
+  border: 0;
+  border-top: 1px solid rgb(var(--color-border));
+  margin: 1.5rem 0;
+}
+.legal-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 14px;
+}
+.legal-prose th, .legal-prose td {
+  border: 1px solid rgb(var(--color-border));
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+.legal-prose th {
+  background: rgb(var(--color-surface));
+  font-weight: 600;
+}
+.legal-prose code {
+  background: rgb(var(--color-surface));
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
 /* Print: show only the resume, full page, white background. */
 @media print {
   @page {

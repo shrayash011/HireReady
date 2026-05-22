@@ -246,10 +246,14 @@ function PublicFooter() {
         <div>
           © {new Date().getFullYear()} HireReady
         </div>
-        <nav className="flex items-center gap-4">
+        <nav className="flex flex-wrap items-center justify-center gap-4">
           <Link href="/pricing" className="hover:text-text">Pricing</Link>
           <Link href="/login" className="hover:text-text">Log in</Link>
           <Link href="/signup" className="hover:text-text">Sign up</Link>
+          <span className="text-border" aria-hidden>·</span>
+          <Link href="/terms" className="hover:text-text">Terms</Link>
+          <Link href="/privacy" className="hover:text-text">Privacy</Link>
+          <Link href="/refund" className="hover:text-text">Refund</Link>
         </nav>
       </div>
     </footer>
