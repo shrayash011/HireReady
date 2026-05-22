@@ -44,11 +44,11 @@ export default function RefundPage() {
         </thead>
         <tbody>
           <tr>
-            <td>Within 14 days of purchase</td>
+            <td>Within 7 days of purchase</td>
             <td>Full refund — no questions asked</td>
           </tr>
           <tr>
-            <td>After 14 days</td>
+            <td>After 7 days</td>
             <td>No refund — access continues until end of annual period</td>
           </tr>
         </tbody>

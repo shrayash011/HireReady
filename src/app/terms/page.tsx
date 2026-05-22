@@ -78,7 +78,7 @@ export default function TermsPage() {
       </p>
       <ul>
         <li>Monthly plans: refunds within 3 days of initial purchase only.</li>
-        <li>Annual plans: refunds within 14 days of initial purchase only.</li>
+        <li>Annual plans: refunds within 7 days of initial purchase only.</li>
         <li>No refunds after the eligible period or for partial months.</li>
       </ul>
 
